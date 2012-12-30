@@ -76,12 +76,12 @@ char* test_insert_tail() {
   return 0;
 }
 
-static char* test_foo() {
+char* test_foo() {
   MU_ASSERT("meh", 0 == 0);
   return 0;
 }
 
-static char* all_tests() {
+char* all_tests() {
   MU_RUN_TEST(test_foo);
   MU_RUN_TEST(test_insert_head);
   MU_RUN_TEST(test_insert_tail);
