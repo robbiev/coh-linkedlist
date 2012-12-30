@@ -1,8 +1,9 @@
 CFLAGS=-Wall -g
+BIN_DIR=bin
 
 all: clean
-	gcc $(CFLAGS) intrusive.c -o bin/intrusive
+	gcc $(CFLAGS) intrusive.c -o $(BIN_DIR)/intrusive
 
 clean:
-	rm -rf bin
-	mkdir bin
+	rm -rf $(BIN_DIR)
+	mkdir $(BIN_DIR)
