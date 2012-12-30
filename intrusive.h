@@ -1,3 +1,4 @@
+#include <stddef.h> /* offsetof */
 typedef struct link {
   struct link *prev; 
   void *next;

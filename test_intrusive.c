@@ -1,8 +1,8 @@
+#include "minunit.h"
+#include "intrusive.h"
 #include <stdio.h>
 #include <stdlib.h> /* malloc */
 #include <stddef.h> /* offsetof */
-#include "minunit.h"
-#include "intrusive.h"
 
 int tests_run = 0;
 
@@ -11,7 +11,6 @@ typedef struct {
   char *name;
   link link;
 } person;
-
 
 person* person_create(char *name, int weight) {
   person *p = (person*)malloc(sizeof(person));
@@ -94,8 +93,7 @@ int main(int argc, char *argv[]) {
   char *result = all_tests();
   if (result) {
     printf("%s\n", result);
-  }
-  else {
+  } else {
     printf("ALL TESTS PASSED\n");
   }
   printf("Tests run: %d\n", tests_run);
