@@ -23,12 +23,6 @@ void link_init(link *l, size_t offset) {
   l->prev = l;
 }
 
-link* link_create(size_t offset) {
-  link* l = (link*)malloc(sizeof(link));
-  link_init(l, offset);
-  return l;
-}
-
 person* person_create(char *name, int weight) {
   person *p = (person*)malloc(sizeof(person));
   p->name = name;
