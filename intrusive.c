@@ -1,7 +1,6 @@
 #include "intrusive.h"
-#include <stdio.h>
 #include <stdlib.h> /* malloc */
-#include <stddef.h> /* offsetof (and size_t, but thats in the header */
+#include <stddef.h> /* size_t */ 
 
 void link_init(link *l, size_t offset) {
   l->next = (void*) ((size_t) l + 1 - offset);
