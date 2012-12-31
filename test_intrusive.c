@@ -1,8 +1,7 @@
 #include "minunit.h"
 #include "intrusive.h"
+#include <stdlib.h>
 #include <stdio.h>
-#include <stdlib.h> /* malloc */
-#include <stddef.h> /* offsetof */
 
 int tests_run = 0;
 
@@ -16,16 +15,15 @@ person* person_create(char *name, int weight) {
   person *p = (person*)malloc(sizeof(person));
   p->name = name;
   p->weight = weight;
-  link_init(&p->link, offsetof(person, link));
+  LINK_INIT(&p->link, person, link);
   return p;
 }
 
 char* test_insert_head() {
   person *p = person_create("Robbie", 190);
   person *p2 = person_create("Trunky", 1);
-  size_t offset = offsetof(person, link);
   
-  list* l = list_create(offset);
+  list* l = LIST_CREATE(person, link);
   list_insert_head(l, p);
   list_insert_head(l, p2);
 
@@ -45,9 +43,8 @@ char* test_insert_head() {
 char* test_insert_tail() {
   person *p = person_create("Robbie", 190);
   person *p2 = person_create("Trunky", 1);
-  size_t offset = offsetof(person, link);
   
-  list* l = list_create(offset);
+  list* l = LIST_CREATE(person, link);
   list_insert_tail(l, p);
   list_insert_tail(l, p2);
 

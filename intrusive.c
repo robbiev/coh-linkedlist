@@ -1,10 +1,29 @@
 #include "intrusive.h"
-#include <stdlib.h> /* malloc */
+#include <stdlib.h>
 #include <stddef.h> /* size_t */ 
+
+static link* list_get_next(link* l);
+static void list_remove(list *l, link *lnk);
+static void list_add_before(list *l, link *link_of_node, void *node, link *next_link);
+static void list_add_after(list *l, link *link_of_node, void *node, link *previous_link);
+static link* list_get_link_from_node(list *l, void* node);
 
 void link_init(link *l, size_t offset) {
   l->next = (void*) ((size_t) l + 1 - offset);
   l->prev = l;
+}
+
+void* link_prev(link *lnk) {
+  void* node = lnk->prev->prev->next;
+  if ((size_t) node & 1)
+    return NULL;
+  return node;
+}
+
+void* link_next(link *lnk) {
+  if ((size_t) lnk->next & 1)
+    return NULL;
+  return lnk->next;
 }
 
 list* list_create(size_t offset) {
@@ -12,6 +31,24 @@ list* list_create(size_t offset) {
   l->offset = offset;
   link_init(&l->link, offset);
   return l;
+}
+
+void list_insert_head(list *l, void* node) {
+  link *link = list_get_link_from_node(l, node);
+  list_add_after(l, link, node, &l->link);
+}
+
+void list_insert_tail(list *l, void* node) {
+  link *link = list_get_link_from_node(l, node);
+  list_add_before(l, link, node, &l->link);
+}
+
+void* list_head(list *l) {
+  return link_next(&l->link); 
+}
+
+void* list_tail(list *l) {
+  return link_prev(&l->link);
 }
 
 static link* list_get_next(link* l) {
@@ -52,33 +89,3 @@ static link* list_get_link_from_node(list *l, void* node) {
   return lnk;
 }
 
-void list_insert_head(list *l, void* node) {
-  link *link = list_get_link_from_node(l, node);
-  list_add_after(l, link, node, &l->link);
-}
-
-void list_insert_tail(list *l, void* node) {
-  link *link = list_get_link_from_node(l, node);
-  list_add_before(l, link, node, &l->link);
-}
-
-void* link_prev(link *lnk) {
-  void* node = lnk->prev->prev->next;
-  if ((size_t) node & 1)
-    return NULL;
-  return node;
-}
-
-void* link_next(link *lnk) {
-  if ((size_t) lnk->next & 1)
-    return NULL;
-  return lnk->next;
-}
-
-void* list_head(list *l) {
-  return link_next(&l->link); 
-}
-
-void* list_tail(list *l) {
-  return link_prev(&l->link);
-}

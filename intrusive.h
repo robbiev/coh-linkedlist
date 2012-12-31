@@ -1,4 +1,10 @@
-#include <stddef.h> /* offsetof */
+#ifndef INTRUSIVE_H
+#define INTRUSIVE_H
+#include <stddef.h> /* size_t, offsetof */
+#define LIST_CREATE(structure, member) list_create(offsetof(structure, member))
+#define LINK_INIT(linkptr, structure, member) \
+  link_init(linkptr, offsetof(structure, member))
+
 typedef struct link {
   struct link *prev; 
   void *next;
@@ -18,3 +24,5 @@ void list_insert_head(list *l, void* node);
 void list_insert_tail(list *l, void* node);
 void* list_head(list *l);
 void* list_tail(list *l);
+
+#endif
