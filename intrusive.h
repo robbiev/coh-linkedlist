@@ -1,5 +1,5 @@
-#ifndef INTRUSIVE_H
-#define INTRUSIVE_H
+#ifndef INTRUSIVE_H_
+#define INTRUSIVE_H_
 #include <stddef.h> /* size_t, offsetof */
 #define LIST_CREATE(structure, member) list_create(offsetof(structure, member))
 #define LINK_INIT(linkptr, structure, member) \

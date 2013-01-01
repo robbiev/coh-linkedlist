@@ -2,6 +2,7 @@
 #include "intrusive.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 int tests_run = 0;
 
@@ -30,8 +31,8 @@ char* test_insert_head() {
   person *phead = (person*) list_head(l);
   person *next = (person*) link_next(&phead->link);
 
-  printf("head insert, head #1: %s\n", phead->name);
-  printf("head insert, head #2: %s\n", next->name);
+  MU_ASSERT("head of the list is Trunky", strcmp("Trunky", phead->name) == 0);
+  MU_ASSERT("second in the list is Robbie", strcmp("Robbie", next->name) == 0);
 
   free(p);
   free(p2);
@@ -51,20 +52,21 @@ char* test_insert_tail() {
   person *phead = (person*) list_head(l);
   person *next = (person*) link_next(&phead->link);
 
-  printf("tail insert, head #1: %s\n", phead->name);
-  printf("tail insert, head #2: %s\n", next->name);
+  MU_ASSERT("head of the list is Robbie", strcmp("Robbie", phead->name) == 0);
+  MU_ASSERT("second in the list is Trunky", strcmp("Trunky", next->name) == 0);
 
   person *ptail = (person*) list_tail(l);
   person *nextt = (person*) link_next(&ptail->link);
 
-  printf("tail insert, tail #1: %s\n", ptail->name);
-  printf("tail insert, tail #2 NULL?: %d\n", nextt == NULL);
+  
+  MU_ASSERT("tail of the list is Trunky", strcmp("Trunky", ptail->name) == 0);
+  MU_ASSERT("tail+1 of the list is NULL", nextt == NULL); 
 
   person *prev = (person*) link_prev(&ptail->link);
   person *prev2 = (person*) link_prev(&prev->link);
 
-  printf("tail insert, tail #-1 NULL?: %d\n", prev == NULL);
-  printf("tail insert, tail #-2 NULL?: %d\n", prev2 == NULL);
+  MU_ASSERT("tail-1 of the list is NOT NULL", prev != NULL); 
+  MU_ASSERT("tail-2 of the list is NULL", prev2 == NULL); 
 
   free(p);
   free(p2);
@@ -73,23 +75,16 @@ char* test_insert_tail() {
   return 0;
 }
 
-char* test_foo() {
-  MU_ASSERT("meh", 0 == 0);
-  return 0;
-}
-
 char* all_tests() {
-  MU_RUN_TEST(test_foo);
   MU_RUN_TEST(test_insert_head);
   MU_RUN_TEST(test_insert_tail);
-  MU_RUN_TEST(test_foo);
   return 0;
 }
 
 int main(int argc, char *argv[]) {
   char *result = all_tests();
   if (result) {
-    printf("%s\n", result);
+    printf("FAILED: %s\n", result);
   } else {
     printf("ALL TESTS PASSED\n");
   }
