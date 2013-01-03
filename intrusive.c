@@ -99,6 +99,5 @@ static void list_add_after(list *l, link *link_of_node, void *node, link *previo
 }
 
 static link* list_get_link_from_node(list *l, void* node) {
-  link* lnk = (link*) ((size_t) node + l->offset);
-  return lnk;
+  return (link*) ((size_t) node + l->offset);
 }
