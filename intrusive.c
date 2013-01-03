@@ -1,9 +1,9 @@
 #include "intrusive.h"
-#include <stdlib.h>
 #include <stddef.h> /* size_t */ 
+#include <stdlib.h>
 
 static link* list_get_next(link* l);
-static void list_remove(list *l, link *lnk);
+static void link_remove(link *lnk);
 static void list_add_before(list *l, link *link_of_node, void *node, link *next_link);
 static void list_add_after(list *l, link *link_of_node, void *node, link *previous_link);
 static link* list_get_link_from_node(list *l, void* node);
@@ -26,10 +26,24 @@ void* link_next(link *lnk) {
   return lnk->next;
 }
 
+int link_is_linked(link *lnk) {
+  return lnk->prev != lnk;
+}
+
+void link_unlink(link *lnk) {
+  link_remove(lnk);
+
+  // end of the list with no offset
+  lnk->next = (void*) ((size_t) lnk + 1);
+  lnk->prev = lnk;
+}
+
 list* list_create(size_t offset) {
-  list *l = (list*) malloc(sizeof(list));
-  l->offset = offset;
-  link_init(&l->link, offset);
+  list *l = malloc(sizeof(list));
+  if (l) {
+    l->offset = offset;
+    link_init(&l->link, offset);
+  }
   return l;
 }
 
@@ -59,13 +73,13 @@ static link* list_get_next(link* l) {
   return (link*) (offset_of_next + offset);
 }
 
-static void list_remove(list *l, link *lnk) {
+static void link_remove(link *lnk) {
   list_get_next(lnk)->prev = lnk->prev;
   lnk->prev->next = lnk->next;
 }
 
 static void list_add_before(list *l, link *link_of_node, void *node, link *next_link) {
-  list_remove(l, link_of_node);
+  link_remove(link_of_node);
 
   link_of_node->prev = next_link->prev;
   link_of_node->next = link_of_node->prev->next;
@@ -75,7 +89,7 @@ static void list_add_before(list *l, link *link_of_node, void *node, link *next_
 }
 
 static void list_add_after(list *l, link *link_of_node, void *node, link *previous_link) {
-  list_remove(l, link_of_node);
+  link_remove(link_of_node);
 
   link_of_node->prev = previous_link;
   link_of_node->next = previous_link->next;
@@ -88,4 +102,3 @@ static link* list_get_link_from_node(list *l, void* node) {
   link* lnk = (link*) ((size_t) node + l->offset);
   return lnk;
 }
-

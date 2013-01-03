@@ -1,7 +1,7 @@
 #include "minunit.h"
 #include "intrusive.h"
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 int tests_run = 0;
@@ -13,10 +13,12 @@ typedef struct {
 } person;
 
 person* person_create(char *name, int weight) {
-  person *p = (person*)malloc(sizeof(person));
-  p->name = name;
-  p->weight = weight;
-  LINK_INIT(&p->link, person, link);
+  person *p = malloc(sizeof(person));
+  if (p) {
+    p->name = name;
+    p->weight = weight;
+    LINK_INIT(&p->link, person, link);
+  }
   return p;
 }
 
@@ -33,6 +35,13 @@ char* test_insert_head() {
 
   MU_ASSERT("head of the list is Trunky", strcmp("Trunky", phead->name) == 0);
   MU_ASSERT("second in the list is Robbie", strcmp("Robbie", next->name) == 0);
+
+  MU_ASSERT("head is linked before unlink", link_is_linked(&phead->link));
+  link_unlink(&phead->link);
+  MU_ASSERT("head is not linked after unlink", !link_is_linked(&phead->link));
+
+  phead = (person*) list_head(l);
+  MU_ASSERT("head of the list is Robbie", strcmp("Robbie", phead->name) == 0);
 
   free(p);
   free(p2);
@@ -60,13 +69,13 @@ char* test_insert_tail() {
 
   
   MU_ASSERT("tail of the list is Trunky", strcmp("Trunky", ptail->name) == 0);
-  MU_ASSERT("tail+1 of the list is NULL", nextt == NULL); 
+  MU_ASSERT("tail+1 of the list is NULL", !nextt); 
 
   person *prev = (person*) link_prev(&ptail->link);
   person *prev2 = (person*) link_prev(&prev->link);
 
-  MU_ASSERT("tail-1 of the list is NOT NULL", prev != NULL); 
-  MU_ASSERT("tail-2 of the list is NULL", prev2 == NULL); 
+  MU_ASSERT("tail-1 of the list is NOT NULL", prev); 
+  MU_ASSERT("tail-2 of the list is NULL", !prev2); 
 
   free(p);
   free(p2);

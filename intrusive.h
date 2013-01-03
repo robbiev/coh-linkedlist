@@ -18,6 +18,8 @@ typedef struct list {
 void link_init(link *l, size_t offset);
 void* link_prev(link *lnk); 
 void* link_next(link *lnk);
+int link_is_linked(link *lnk);
+void link_unlink(link *lnk);
 
 list* list_create(size_t offset);
 void list_insert_head(list *l, void* node);
