@@ -2,15 +2,15 @@
 #include <stddef.h> /* size_t */ 
 #include <stdlib.h>
 
-static link* list_get_next(link* l);
+static link* link_get_next(link* l);
 static void link_remove(link *lnk);
 static void list_add_before(list *l, link *link_of_node, void *node, link *next_link);
 static void list_add_after(list *l, link *link_of_node, void *node, link *previous_link);
 static link* list_get_link_from_node(list *l, void* node);
 
-void link_init(link *l, size_t offset) {
-  l->next = (void*) ((size_t) l + 1 - offset);
-  l->prev = l;
+void link_init(link *lnk, size_t offset) {
+  lnk->next = (void*) ((size_t) lnk + 1 - offset);
+  lnk->prev = lnk;
 }
 
 void* link_prev(link *lnk) {
@@ -65,16 +65,16 @@ void* list_tail(list *l) {
   return link_prev(&l->link);
 }
 
-static link* list_get_next(link* l) {
+static link* link_get_next(link* lnk) {
   /* offset from a node pointer to a link structure */
-  size_t offset = (size_t) l - ((size_t) l->prev->next & ~1);
+  size_t offset = (size_t) lnk - ((size_t) lnk->prev->next & ~1);
   /* link field for the next node */
-  size_t offset_of_next = (size_t) l->next & ~1;
+  size_t offset_of_next = (size_t) lnk->next & ~1;
   return (link*) (offset_of_next + offset);
 }
 
 static void link_remove(link *lnk) {
-  list_get_next(lnk)->prev = lnk->prev;
+  link_get_next(lnk)->prev = lnk->prev;
   lnk->prev->next = lnk->next;
 }
 
@@ -94,7 +94,7 @@ static void list_add_after(list *l, link *link_of_node, void *node, link *previo
   link_of_node->prev = previous_link;
   link_of_node->next = previous_link->next;
 
-  list_get_next(previous_link)->prev = link_of_node;
+  link_get_next(previous_link)->prev = link_of_node;
   previous_link->next = node;
 }
 

@@ -22,7 +22,7 @@ person* person_create(char *name, int weight) {
   return p;
 }
 
-char* test_insert_head() {
+char* smoke_test_1() {
   person *p = person_create("Robbie", 190);
   person *p2 = person_create("Trunky", 1);
   
@@ -50,7 +50,7 @@ char* test_insert_head() {
   return 0;
 }
 
-char* test_insert_tail() {
+char* smoke_test_2() {
   person *p = person_create("Robbie", 190);
   person *p2 = person_create("Trunky", 1);
   
@@ -85,8 +85,8 @@ char* test_insert_tail() {
 }
 
 char* all_tests() {
-  MU_RUN_TEST(test_insert_head);
-  MU_RUN_TEST(test_insert_tail);
+  MU_RUN_TEST(smoke_test_1);
+  MU_RUN_TEST(smoke_test_2);
   return 0;
 }
 

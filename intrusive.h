@@ -5,6 +5,8 @@
 #define LINK_INIT(linkptr, structure, member) \
   link_init(linkptr, offsetof(structure, member))
 
+// All nodes (=next) must be allocated on (at least) two-byte boundaries
+// because the low bit is used as a sentinel to signal end-of-list.
 typedef struct link {
   struct link *prev; 
   void *next;
